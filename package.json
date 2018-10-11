@@ -1,0 +1,17 @@
+{
+  "name": "trivia",
+  "version": "1.0.0",
+  "description": "Test with node.js =====================",
+  "main": "game.js",
+  "scripts": {
+    "test": "mocha src/**/*.spec.js"
+  },
+  "author": "",
+  "license": "GPL v3",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint-config-airbnb-standard": "^2.1.6",
+    "mocha": "^5.2.0",
+    "should": "^13.2.1"
+  }
+}
