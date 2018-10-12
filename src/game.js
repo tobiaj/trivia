@@ -4,16 +4,22 @@ const winningPoints = 6;
 let currentPlayer = 0;
 let activePlayer = null;
 
-const deck = {
-  Pop: [...Array(50)].map((x, i) => `popQuestions ${i}`),
-  Science: [...Array(50)].map((x, i) => `scienceQuestions ${i}`),
-  Sports: [...Array(50)].map((x, i) => `sportsQuestions ${i}`),
-  Rock: [...Array(50)].map((x, i) => `rockQuestions ${i}`)
-};
+function createDeck (numberOfQuestions) {
+  const test = {
+    Pop: [...Array(numberOfQuestions)].map((x, i) => `popQuestions ${i}`),
+    Science: [...Array(numberOfQuestions)].map((x, i) => `scienceQuestions ${i}`),
+    Sports: [...Array(numberOfQuestions)].map((x, i) => `sportsQuestions ${i}`),
+    Rock: [...Array(numberOfQuestions)].map((x, i) => `rockQuestions ${i}`)
+  };
+
+  return test;
+}
+
 class Game {
   constructor (numberOfQuestions) {
     this.players = [];
     this.board = ['Pop', 'Science', 'Sports', 'Rock', 'Pop', 'Science', 'Sports', 'Rock', 'Pop', 'Science', 'Sports', 'Rock'];
+    this.deck = createDeck(numberOfQuestions);
   }
 
   isPlayable () {
@@ -21,17 +27,14 @@ class Game {
   }
 
   hasPlayerWon () {
-    console.log(this.players[currentPlayer].getPurse() < winningPoints);
     return (this.players[currentPlayer].getPurse() < winningPoints);
   }
 
   nextPlayer () {
-    console.log(currentPlayer);
     currentPlayer += 1;
     if (currentPlayer === this.players.length) {
       currentPlayer = 0;
     }
-    console.log(currentPlayer);
   }
 
   howManyPlayers () {
@@ -40,7 +43,6 @@ class Game {
 
   addPlayer (player) {
     this.players.push(player);
-    console.log(this.players);
   }
 
   updatePosition (player, steps) {
@@ -67,11 +69,11 @@ class Game {
       console.log(`${activePlayer.getName()} is getting out of the penalty box or was never there`);
       activePlayer.setIsInPeneltyBox(false);
       this.updatePosition(activePlayer, roll);
-      console.log(deck[this.currentCategory(activePlayer.getPlace())].splice(0, 1));
+      console.log(this.deck[this.currentCategory(activePlayer.getPlace())].splice(0, 1));
     }
   }
 
-  correclyAnswered () {
+  correctAnswer () {
     activePlayer = this.players[currentPlayer];
     if (!activePlayer.getIsInPeneltyBox()) {
       console.log('Answer was correct!!!!');
@@ -113,7 +115,7 @@ do {
   if (Math.floor(Math.random() * 10) === 7) {
     notAWinner = game.wrongAnswer();
   } else {
-    notAWinner = game.correclyAnswered();
+    notAWinner = game.correctAnswer();
   }
 } while (notAWinner);
 
