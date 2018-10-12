@@ -4,14 +4,16 @@ const winningPoints = 6;
 let currentPlayer = 0;
 let activePlayer = null;
 
+const deck = {
+  Pop: [...Array(50)].map((x, i) => `popQuestions ${i}`),
+  Science: [...Array(50)].map((x, i) => `scienceQuestions ${i}`),
+  Sports: [...Array(50)].map((x, i) => `sportsQuestions ${i}`),
+  Rock: [...Array(50)].map((x, i) => `rockQuestions ${i}`)
+};
 class Game {
   constructor (numberOfQuestions) {
     this.players = [];
-    this.popQuestions = [...Array(numberOfQuestions)].map((x, i) => `popQuestions ${i}`);
-    this.scienceQuestions = [...Array(numberOfQuestions)].map((x, i) => `scienceQuestions ${i}`);
-    this.sportsQuestions = [...Array(numberOfQuestions)].map((x, i) => `sportsQuestions ${i}`);
-    this.rockQuestions = [...Array(numberOfQuestions)].map((x, i) => `rockQuestions ${i}`);
-    this.board = ['Pop', 'Science', 'Sports', 'Rocks', 'Pop', 'Science', 'Sports', 'Rocks', 'Pop', 'Science', 'Sports', 'Rocks'];
+    this.board = ['Pop', 'Science', 'Sports', 'Rock', 'Pop', 'Science', 'Sports', 'Rock', 'Pop', 'Science', 'Sports', 'Rock'];
   }
 
   isPlayable () {
@@ -41,7 +43,7 @@ class Game {
     console.log(this.players);
   }
 
-  movePlayer (player, steps) {
+  updatePosition (player, steps) {
     let place = player.getPlace();
     place += steps;
     if (place > 11) {
@@ -54,30 +56,18 @@ class Game {
     return this.board[position];
   }
 
-  rollDice (roll) {
-    console.log(`${this.players[currentPlayer].getName()} is the current player`);
+  movePlayerPosition (roll) {
+    activePlayer = this.players[currentPlayer];
+    console.log(`${activePlayer.getName()} is the current player`);
     console.log(`They have rolled a ${roll}`);
 
-    if (this.players[currentPlayer].getIsInPeneltyBox()) {
-      if (roll % 2 !== 0) {
-        this.players[currentPlayer].setIsInPeneltyBox(false);
-
-        console.log(`${this.players[currentPlayer].getName()} is getting out of the penalty box`);
-        this.movePlayer(this.players[currentPlayer], roll);
-
-        console.log(`${this.players[currentPlayer].getName()} s new location is ${this.players[currentPlayer].getPlace()}`);
-        console.log(`The category is ${this.currentCategory(this.players[currentPlayer].getPlace())}`);
-        // askQuestion();
-      } else {
-        console.log(`${this.players[currentPlayer].getName()} is not getting out of the penalty box`);
-        this.players[currentPlayer].setIsInPeneltyBox(true);
-      }
+    if (activePlayer.getIsInPeneltyBox() && roll % 2 === 0) {
+      console.log(`${activePlayer.getName()} is not getting out of the penalty box`);
     } else {
-      this.movePlayer(this.players[currentPlayer], roll);
-
-      console.log(`${this.players[currentPlayer].getName()} s new location is ${this.players[currentPlayer].getPlace()}`);
-      console.log(`The category is ${this.currentCategory(this.players[currentPlayer].getPlace())}`);
-      // askQuestion();
+      console.log(`${activePlayer.getName()} is getting out of the penalty box or was never there`);
+      activePlayer.setIsInPeneltyBox(false);
+      this.updatePosition(activePlayer, roll);
+      console.log(deck[this.currentCategory(activePlayer.getPlace())].splice(0, 1));
     }
   }
 
@@ -93,10 +83,10 @@ class Game {
       return won;
     }
     this.nextPlayer();
-    return false;
+    return true;
   }
 
-  wronglyAnswered () {
+  wrongAnswer () {
     activePlayer = this.players[currentPlayer];
     console.log('Question was incorrectly answered');
     console.log(`${activePlayer.getName()} was sent to the penalty`);
@@ -108,7 +98,7 @@ class Game {
 
 let notAWinner = false;
 
-const game = new Game();
+const game = new Game(50);
 const Player1 = new Player('Chet', 0, 0);
 const Player2 = new Player('Pat', 0, 0);
 const Player3 = new Player('Sue', 0, 0);
@@ -118,10 +108,10 @@ game.addPlayer(Player2);
 game.addPlayer(Player3);
 
 do {
-  game.rollDice(Math.floor(Math.random() * 6) + 1);
+  game.movePlayerPosition(Math.floor(Math.random() * 6) + 1);
 
   if (Math.floor(Math.random() * 10) === 7) {
-    notAWinner = game.wronglyAnswered();
+    notAWinner = game.wrongAnswer();
   } else {
     notAWinner = game.correclyAnswered();
   }

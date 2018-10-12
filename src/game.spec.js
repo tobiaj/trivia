@@ -13,6 +13,15 @@ describe('The test environment', () => {
   });
 });
 
+describe('Test game', () => {
+  const game = new Game(50);
+
+  it('Unplayable game', () => {
+    game.isPlayable().should.equal(false);
+  })
+});
+
+
 describe('Test Player', () => {
   const player1 = new Player('Chet', 0, 0);
 
