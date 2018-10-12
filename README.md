@@ -7,4 +7,4 @@ Test with node.js
     Any test source matching the pattern *.spec.js will be executed.
 
 
-På grund av begränsad tid blev koden lite statisk, klumpig och välidgt begränsade tester. 
+På grund av begränsad tid blev koden lite statisk, klumpig och väldigt begränsade tester. 
