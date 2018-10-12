@@ -5,20 +5,25 @@ let currentPlayer = 0;
 let activePlayer = null;
 
 function createDeck (numberOfQuestions) {
-  const test = {
+  const deck = {
     Pop: [...Array(numberOfQuestions)].map((x, i) => `popQuestions ${i}`),
     Science: [...Array(numberOfQuestions)].map((x, i) => `scienceQuestions ${i}`),
     Sports: [...Array(numberOfQuestions)].map((x, i) => `sportsQuestions ${i}`),
     Rock: [...Array(numberOfQuestions)].map((x, i) => `rockQuestions ${i}`)
   };
 
-  return test;
+  return deck;
+}
+
+function createBoard () {
+  const board = ['Pop', 'Science', 'Sports', 'Rock', 'Pop', 'Science', 'Sports', 'Rock', 'Pop', 'Science', 'Sports', 'Rock'];
+  return board;
 }
 
 class Game {
   constructor (numberOfQuestions) {
     this.players = [];
-    this.board = ['Pop', 'Science', 'Sports', 'Rock', 'Pop', 'Science', 'Sports', 'Rock', 'Pop', 'Science', 'Sports', 'Rock'];
+    this.board = createBoard();
     this.deck = createDeck(numberOfQuestions);
   }
 
